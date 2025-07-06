@@ -106,6 +106,7 @@ jobs:
       - build-ui
       - get-git-version
     steps:
+      - uses: actions/checkout@v4
       - name: Deploy to Kubernetes cluster on VM
         run: |
           envsubst < k8s-app.yaml | kubectl apply -f -
