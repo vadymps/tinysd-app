@@ -20,6 +20,7 @@ jobs:
       - name: Get git version
         id: get_version
         run: |
+          git fetch --tags
           GIT_VERSION=$(git describe --tags --always --dirty)
           echo "GIT_VERSION=$GIT_VERSION" >> $GITHUB_OUTPUT
 
