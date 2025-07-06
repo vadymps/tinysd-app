@@ -1,0 +1,9 @@
+{
+  "name": "tinysd-ui-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/tinysd-ui-e2e/src",
+  "implicitDependencies": ["tinysd-ui"],
+  "// targets": "to see all targets run: nx show project tinysd-ui-e2e --web",
+  "targets": {}
+}
