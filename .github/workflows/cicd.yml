@@ -25,7 +25,7 @@ jobs:
           echo "GIT_VERSION=$GIT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Use the tag
-        run: echo "Latest tag is $GIT_VERSION"
+        run: echo "Latest tag is ${{ steps.get_version.outputs.GIT_VERSION }}"
 
   build-api:
     runs-on: ubuntu-latest
@@ -59,7 +59,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile_api
+          file: Dockerfile
           push: true
           tags: vadimpastushenko7/tinysd-api:${{ needs.get-git-version.outputs.GIT_VERSION }}
 
@@ -95,7 +95,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile_ui
+          file: Dockerfile
           push: true
           tags: vadimpastushenko7/tinysd-ui:${{ needs.get-git-version.outputs.GIT_VERSION }}
 
