@@ -57,7 +57,7 @@ jobs:
   build-be:
     runs-on: ubuntu-latest
     needs: detect-changes
-    if: needs.detect-changes.outputs.be_changed == 'true'
+    # if: needs.detect-changes.outputs.be_changed == 'true'
     steps:
       - uses: actions/checkout@v4
 
@@ -92,7 +92,7 @@ jobs:
   build-fe:
     runs-on: ubuntu-latest
     needs: detect-changes
-    if: needs.detect-changes.outputs.fe_changed == 'true'
+    # if: needs.detect-changes.outputs.fe_changed == 'true'
     steps:
       - uses: actions/checkout@v4
 
