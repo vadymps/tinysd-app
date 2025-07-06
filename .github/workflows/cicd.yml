@@ -21,7 +21,7 @@ jobs:
         id: get_version
         run: |
           git fetch --tags
-          GIT_VERSION=$(git describe --tags --always --dirty)
+          GIT_VERSION=$(git describe --tags --abbrev=0)
           echo "GIT_VERSION=$GIT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Use the tag
@@ -58,8 +58,8 @@ jobs:
       - name: Build and push API Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: Dockerfile
+          context: ./tinysd-api
+          file: ./tinysd-api/Dockerfile
           push: true
           tags: vadimpastushenko7/tinysd-api:${{ needs.get-git-version.outputs.GIT_VERSION }}
 
@@ -94,8 +94,8 @@ jobs:
       - name: Build and push UI Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: Dockerfile
+          context: ./tinysd-ui
+          file: ./tinysd-ui/Dockerfile
           push: true
           tags: vadimpastushenko7/tinysd-ui:${{ needs.get-git-version.outputs.GIT_VERSION }}
 
