@@ -1,46 +1,44 @@
-# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# Node
+node_modules/
+dist/
+coverage/
+.env
+.env.*
 
-# compiled output
-dist
-tmp
-out-tsc
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# dependencies
-node_modules
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
-/typings
-
-# System Files
+# OS
 .DS_Store
 Thumbs.db
 
-.nx/cache
-.nx/workspace-data
-.cursor/rules/nx-rules.mdc
-.github/instructions/nx.instructions.md
+# IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
-.angular
+# Docker
+*.local
+
+# Build output
+/build/
+
+# Misc
+*.tgz
+
+# Nx
+nx-out/
+
+# Others
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Ignore local env files
+*.local.env
