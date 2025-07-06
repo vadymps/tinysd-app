@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-push:
+  detect-changes:
     runs-on: ubuntu-latest
     outputs:
       git_tag: ${{ steps.get_tag.outputs.tag }}
@@ -126,11 +126,12 @@ jobs:
 
   deploy-on-vm:
     runs-on: self-hosted
-    needs: build-and-push
-
+    needs:
+      - build-be
+      - build-fe
     steps:
       - name: Deploy to Kubernetes cluster on VM
         run: |
           envsubst < k8s-angular-agent-app.yaml | kubectl apply -f -
         env:
-          IMAGE_TAG: ${{ needs.build-and-push.outputs.git_tag }}
+          IMAGE_TAG: ${{ needs.detect-changes.outputs.git_tag }}
