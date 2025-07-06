@@ -2,7 +2,13 @@
   "name": "@tinysd-app/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build": "npx nx run-many -t build",
+    "build-api": "nx run tinysd-api:build",
+    "build-api:production": "nx run tinysd-ui:build:production",
+    "build-ui": "nx run tinysd-ui:build",
+    "build-ui:production": "nx run tinysd-ui:build:production"
+  },
   "private": true,
   "dependencies": {
     "@angular/common": "~20.0.0",
