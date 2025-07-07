@@ -6,19 +6,56 @@ mat-card {
   box-shadow: 0 2px 16px #0002;
   background: #fff;
 }
+
 h1 {
   text-align: center;
   color: #1976d2;
 }
+
 nav {
   text-align: center;
   margin-bottom: 24px;
 }
+
 nav a {
   margin: 0 12px;
+  transition: color 0.2s ease;
 }
+
+// Active navigation link styles
+nav a.active {
+  color: #1976d2 !important;
+  font-weight: 600;
+}
+
+nav a.active mat-icon {
+  color: #1976d2;
+}
+
 .welcome {
   margin: 32px 0;
   text-align: center;
   color: #888;
+}
+
+// Prevent layout shifts and flickering
+.router-outlet-container {
+  min-height: 400px; // Ensure consistent height
+  display: block;
+}
+
+// Smooth transitions for router outlet
+router-outlet + * {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

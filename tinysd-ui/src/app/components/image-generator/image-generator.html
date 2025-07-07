@@ -1,34 +1,66 @@
-<form [formGroup]="form" class="form">
-  <mat-form-field>
-    <mat-label>Prompt</mat-label>
-    <textarea
-      matInput
-      formControlName="prompt"
-      placeholder="Enter your prompt..."
-      rows="4"
-    ></textarea>
-    <mat-hint>Describe the image you want to generate.</mat-hint>
-    @if (form.get('prompt')?.hasError('required')) {
-    <mat-error>Prompt is <strong>required</strong></mat-error>
+<div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Generate Image</h2>
+  
+  <form [formGroup]="form" class="space-y-4">
+    <mat-form-field class="w-full">
+      <mat-label>Prompt</mat-label>
+      <textarea
+        matInput
+        formControlName="prompt"
+        placeholder="Enter your prompt..."
+        rows="4"
+        class="w-full"
+      ></textarea>
+      <mat-hint>Describe the image you want to generate.</mat-hint>
+      @if (form.get('prompt')?.hasError('required')) {
+      <mat-error>Prompt is <strong>required</strong></mat-error>
+      }
+    </mat-form-field>
+
+    <div class="flex gap-4">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="generateImage()"
+        [disabled]="loading || form.invalid"
+        class="flex-1"
+      >
+        <mat-icon>auto_awesome</mat-icon>
+        {{ loading ? 'Generating...' : 'Generate Image' }}
+      </button>
+      
+      @if (imageUrl) {
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="saveImage()"
+        [disabled]="saving"
+        class="flex-1"
+      >
+        <mat-icon>save</mat-icon>
+        {{ saving ? 'Saving...' : 'Save Image' }}
+      </button>
+      }
+    </div>
+
+    @if (error) {
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+      <strong class="font-bold">Error!</strong>
+      <span class="block sm:inline"> {{ error }}</span>
+    </div>
     }
-  </mat-form-field>
-
-  <button
-    mat-raised-button
-    color="primary"
-    (click)="generateImage()"
-    [disabled]="loading || form.invalid"
-  >
-    Generate Image
-  </button>
-
-  @if (loading) {
-  <div>Generating...</div>
-  } @if (error) {
-  <div class="error">{{ error }}</div>
-  } @if (imageUrl) {
-  <div>
-    <img [src]="imageUrl" alt="Generated image" />
-  </div>
-  }
-</form>
+    
+    @if (imageUrl) {
+    <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+      <h3 class="text-lg font-semibold text-gray-800 mb-3">Generated Image</h3>
+      <div class="text-center">
+        <img 
+          [src]="imageUrl" 
+          alt="Generated image" 
+          class="max-w-full h-auto rounded-lg shadow-md mx-auto"
+        />
+      </div>
+    </div>
+    }
+  </form>
+</div>

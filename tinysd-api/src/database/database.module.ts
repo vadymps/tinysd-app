@@ -1,6 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongoClient, Db, Collection } from 'mongodb';
+import { MongoClient, Db } from 'mongodb';
 
 @Global()
 @Module({
@@ -47,7 +47,23 @@ import { MongoClient, Db, Collection } from 'mongodb';
       },
       inject: ['DATABASE_CONNECTION', ConfigService],
     },
+    {
+      provide: 'SAVED_IMAGES_COLLECTION',
+      useFactory: (db: Db) => {
+        const collectionName = 'saved_images';
+        const collection = db.collection(collectionName);
+        console.log(
+          `Successfully connected to collection: ${collection.collectionName}`,
+        );
+        return collection;
+      },
+      inject: ['DATABASE_CONNECTION'],
+    },
   ],
-  exports: ['DATABASE_CONNECTION', 'LOGS_COLLECTION'],
+  exports: [
+    'DATABASE_CONNECTION',
+    'LOGS_COLLECTION',
+    'SAVED_IMAGES_COLLECTION',
+  ],
 })
 export class DatabaseModule {}

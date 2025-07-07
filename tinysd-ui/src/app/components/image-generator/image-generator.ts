@@ -11,6 +11,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-image-generator',
@@ -24,15 +26,23 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatDividerModule,
     MatIconModule,
+    MatSnackBarModule,
   ],
 })
 export class ImageGeneratorComponent {
   form: FormGroup;
   imageUrl: string | null = null;
   loading = false;
+  saving = false;
   error: string | null = null;
+  currentPrompt: string = '';
 
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(
+    private http: HttpClient, 
+    private fb: FormBuilder,
+    private imageService: ImageService,
+    private snackBar: MatSnackBar
+  ) {
     this.form = this.fb.group({
       prompt: ['', Validators.required],
     });
@@ -44,7 +54,9 @@ export class ImageGeneratorComponent {
     this.error = null;
     this.imageUrl = null;
     const prompt = this.form.value.prompt;
-    this.http.post<any>('/api/image/generate', { prompt }).subscribe({
+    this.currentPrompt = prompt;
+    
+    this.imageService.generateImage(prompt).subscribe({
       next: (res) => {
         this.imageUrl = res?.output?.[0] || null;
         this.loading = false;
@@ -52,6 +64,26 @@ export class ImageGeneratorComponent {
       error: (err) => {
         this.error = err.error?.error || 'Failed to generate image';
         this.loading = false;
+      },
+    });
+  }
+
+  saveImage() {
+    if (!this.imageUrl || !this.currentPrompt) return;
+    
+    this.saving = true;
+    this.imageService.saveImage(this.imageUrl, this.currentPrompt).subscribe({
+      next: (savedImage) => {
+        this.saving = false;
+        this.snackBar.open('Image saved successfully!', 'Close', {
+          duration: 3000,
+        });
+      },
+      error: (err) => {
+        this.saving = false;
+        this.snackBar.open('Failed to save image', 'Close', {
+          duration: 3000,
+        });
       },
     });
   }

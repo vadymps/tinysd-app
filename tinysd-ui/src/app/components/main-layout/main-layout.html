@@ -1,21 +1,54 @@
-<mat-card>
-  <h1 style="text-align: center; color: #1976d2">
-    <a routerLink="/" style="color: inherit; text-decoration: none"
-      >TinySD UI</a
-    >
-  </h1>
-  <nav style="text-align: center; margin-bottom: 24px">
-    <a matButton routerLink="/logs" style="margin: 0 12px; font-size: large"
-      >Logs</a
-    >
-    <a
-      matButton
-      routerLink="/image-generator"
-      style="margin: 0 12px; font-size: large"
-      >Image Generator</a
-    >
-  </nav>
-  <div style="margin: 32px 0; text-align: center; color: #888">
-    <router-outlet #outlet="outlet"></router-outlet>
-  </div>
-</mat-card>
+<div class="min-h-screen bg-gray-50">
+  <mat-card class="max-w-7xl mx-auto">
+    <div class="bg-white shadow-sm border-b">
+      <div class="px-6 py-4">
+        <h1 class="text-3xl font-bold text-center text-blue-600 mb-4">
+          <a
+            routerLink="/"
+            class="text-inherit no-underline hover:text-blue-700 transition-colors"
+          >
+            TinySD UI
+          </a>
+        </h1>
+        <nav class="flex justify-center space-x-6">
+          <a
+            matButton
+            routerLink="/gallery"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: false }"
+            class="text-lg font-medium text-gray-700 hover:text-blue-600 transition-colors"
+          >
+            <mat-icon>photo_library</mat-icon>
+            Gallery
+          </a>
+          <a
+            matButton
+            routerLink="/image-generator"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: false }"
+            class="text-lg font-medium text-gray-700 hover:text-blue-600 transition-colors"
+          >
+            <mat-icon>auto_awesome</mat-icon>
+            Image Generator
+          </a>
+          <a
+            matButton
+            routerLink="/logs"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: false }"
+            class="text-lg font-medium text-gray-700 hover:text-blue-600 transition-colors"
+          >
+            <mat-icon>article</mat-icon>
+            Logs
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="p-6">
+      <div class="router-outlet-container">
+        <router-outlet #outlet="outlet"></router-outlet>
+      </div>
+    </div>
+  </mat-card>
+</div>

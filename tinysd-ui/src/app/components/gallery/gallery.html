@@ -1,0 +1,64 @@
+<div class="max-w-6xl mx-auto p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-3xl font-bold text-gray-800">Saved Images Gallery</h2>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="loadImages()"
+      [disabled]="loading"
+    >
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+  </div>
+
+  @if (loading) {
+  <div class="flex justify-center items-center h-64">
+    <div class="text-lg text-gray-600">Loading images...</div>
+  </div>
+  } @else if (savedImages.length === 0) {
+  <div class="text-center py-12">
+    <mat-icon class="text-6xl text-gray-400 mb-4">photo_library</mat-icon>
+    <h3 class="text-xl text-gray-600 mb-2">No saved images yet</h3>
+    <p class="text-gray-500">Generate and save some images to see them here!</p>
+  </div>
+  } @else {
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (image of savedImages; track image.id) {
+    <mat-card
+      class="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+    >
+      <div class="aspect-square overflow-hidden">
+        <img
+          [src]="image.localPath"
+          [alt]="image.prompt"
+          class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+        />
+      </div>
+      <mat-card-content class="p-4">
+        <h3 class="font-semibold text-gray-800 mb-2 line-clamp-2">
+          {{ image.prompt }}
+        </h3>
+        <p class="text-sm text-gray-500 mb-3">
+          {{ formatDate(image.savedAt) }}
+        </p>
+        <div class="flex justify-between items-center">
+          <button
+            mat-button
+            color="primary"
+            (click)="openImage(image.localPath)"
+          >
+            <mat-icon>open_in_new</mat-icon>
+            View
+          </button>
+          <button mat-button color="warn" (click)="deleteImage(image.id)">
+            <mat-icon>delete</mat-icon>
+            Delete
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    }
+  </div>
+  }
+</div>

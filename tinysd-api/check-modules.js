@@ -11,18 +11,18 @@ const srcDir = path.join(__dirname, 'src');
 function findTsFiles(dir) {
   const files = [];
   const entries = fs.readdirSync(dir);
-  
+
   for (const entry of entries) {
     const fullPath = path.join(dir, entry);
     const stat = fs.statSync(fullPath);
-    
+
     if (stat.isDirectory()) {
       files.push(...findTsFiles(fullPath));
     } else if (entry.endsWith('.ts')) {
       files.push(fullPath);
     }
   }
-  
+
   return files;
 }
 
@@ -35,22 +35,22 @@ let hasIssues = false;
 for (const file of tsFiles) {
   const content = fs.readFileSync(file, 'utf8');
   const relativePath = path.relative(__dirname, file);
-  
+
   // Check for common issues
   if (content.includes('undefined')) {
     console.log(`⚠️  ${relativePath}: Contains 'undefined' keyword`);
   }
-  
+
   if (content.includes('\r\n') && !content.includes('\n')) {
     console.log(`⚠️  ${relativePath}: Has Windows line endings`);
   }
-  
+
   // Check for module exports
   if (file.includes('module.ts') && !content.includes('@Module')) {
     console.log(`❌ ${relativePath}: Missing @Module decorator`);
     hasIssues = true;
   }
-  
+
   console.log(`✅ ${relativePath}`);
 }
 
