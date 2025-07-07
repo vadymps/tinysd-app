@@ -1,0 +1,17 @@
+.nx-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #90caf9 #f5f5f5;
+}
+.nx-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+.nx-scrollbar::-webkit-scrollbar-thumb {
+  background: #90caf9;
+  border-radius: 8px;
+  min-height: 24px;
+}
+.nx-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #1976d2;
+}

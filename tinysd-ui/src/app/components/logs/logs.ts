@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { LogService, Log } from '../../services/log.service';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'logs',
   templateUrl: './logs.html',
-  styles: [],
+  styleUrls: ['./logs.scss'],
+  imports: [MatButton],
 })
 export class LogsComponent implements OnInit {
   logs: Log[] = [];
