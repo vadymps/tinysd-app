@@ -14,7 +14,8 @@ export class ImageService {
 
   constructor(
     private readonly configService: ConfigService,
-    @Inject('SAVED_IMAGES_COLLECTION') private savedImagesCollection: Collection,
+    @Inject('SAVED_IMAGES_COLLECTION')
+    private savedImagesCollection: Collection,
   ) {
     // Ensure images directory exists
     if (!fs.existsSync(this.imagesDir)) {
@@ -39,7 +40,7 @@ export class ImageService {
       const response = await axios.post(
         'https://modelslab.com/api/v6/realtime/text2img',
         {
-          key: 'hmW6iEQ1NbEFauqLjgONoWPZ8SILCwoHwiXlc5tmYejHVfK5i7s8VwLZaTfC',
+          key: 'fYZgDGKGGNBJfzzyZ1ZNnCg6E2CrYULxlbfmxXQwZj8XdKIlIaxbGgZuwQrE',
           prompt,
           negative_prompt,
           width,
@@ -64,37 +65,39 @@ export class ImageService {
   async saveImage(saveImageDto: SaveImageDto): Promise<SavedImageDto> {
     try {
       const { imageUrl, prompt } = saveImageDto;
-      
+
       // Download the image
-      const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+      const response = await axios.get(imageUrl, {
+        responseType: 'arraybuffer',
+      });
       const buffer = Buffer.from(response.data);
-      
+
       // Generate filename
       const timestamp = Date.now();
       const filename = `image_${timestamp}.jpg`;
       const localPath = path.join(this.imagesDir, filename);
-      
+
       // Save file to disk
       fs.writeFileSync(localPath, buffer);
-      
+
       // Save metadata to database
       const savedImage = new SavedImage(
         filename,
         imageUrl,
         prompt,
         new Date(),
-        localPath
+        localPath,
       );
-      
+
       const result = await this.savedImagesCollection.insertOne(savedImage);
-      
+
       return {
         id: result.insertedId.toString(),
         filename,
         originalUrl: imageUrl,
         prompt,
         savedAt: savedImage.savedAt,
-        localPath: `/api/image/saved/${filename}`
+        localPath: `/api/image/saved/${filename}`,
       };
     } catch (error: any) {
       throw new HttpException(
@@ -107,14 +110,14 @@ export class ImageService {
   async getSavedImages(): Promise<SavedImageDto[]> {
     try {
       const savedImages = await this.savedImagesCollection.find({}).toArray();
-      
-      return savedImages.map(img => ({
+
+      return savedImages.map((img) => ({
         id: img._id.toString(),
         filename: img.filename,
         originalUrl: img.originalUrl,
         prompt: img.prompt,
         savedAt: img.savedAt,
-        localPath: `/api/image/saved/${img.filename}`
+        localPath: `/api/image/saved/${img.filename}`,
       }));
     } catch (error: any) {
       throw new HttpException(
@@ -127,17 +130,19 @@ export class ImageService {
   async deleteSavedImage(id: string): Promise<void> {
     try {
       const objectId = new ObjectId(id);
-      const savedImage = await this.savedImagesCollection.findOne({ _id: objectId });
-      
+      const savedImage = await this.savedImagesCollection.findOne({
+        _id: objectId,
+      });
+
       if (!savedImage) {
         throw new HttpException('Image not found', HttpStatus.NOT_FOUND);
       }
-      
+
       // Delete file from disk
       if (fs.existsSync(savedImage.localPath)) {
         fs.unlinkSync(savedImage.localPath);
       }
-      
+
       // Delete from database
       await this.savedImagesCollection.deleteOne({ _id: objectId });
     } catch (error: any) {

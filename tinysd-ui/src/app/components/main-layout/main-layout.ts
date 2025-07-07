@@ -9,6 +9,13 @@ import { RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
   templateUrl: `./main-layout.html`,
   styleUrls: ['./main-layout.scss'],
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, MatCard, MatButton, MatIconModule],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    MatCard,
+    MatButton,
+    MatIconModule,
+  ],
 })
 export class MainLayoutComponent {}
