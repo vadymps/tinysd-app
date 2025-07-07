@@ -50,7 +50,7 @@ spec:
         app: tinysd-api
     spec:
       containers:
-        - name: angular-agent-app
+        - name: tinysd-api
           image: vadimpastushenko7/tinysd-api:${IMAGE_TAG}
           envFrom:
             - secretRef:
