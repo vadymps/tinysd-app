@@ -10,7 +10,7 @@ export interface Log {
 
 @Injectable({ providedIn: 'root' })
 export class LogService {
-  private readonly baseUrl = '/logs';
+  private readonly baseUrl = '/api/logs';
 
   constructor(private http: HttpClient) {}
 

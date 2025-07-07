@@ -93,7 +93,7 @@ spec:
                 name: tinysd-ui
                 port:
                   number: 80
-          - path: /logs
+          - path: /api
             pathType: Prefix
             backend:
               service:

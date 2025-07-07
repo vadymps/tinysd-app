@@ -7,7 +7,7 @@ const port = process.env.PORT || 3000;
 
 connectToDatabase()
   .then(() => {
-    app.use('/logs', logsRouter);
+    app.use('/api/logs', logsRouter);
 
     app.listen(port, () => {
       console.log(`Server started at http://localhost:${port}`);
