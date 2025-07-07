@@ -1,0 +1,17 @@
+.image-generator {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  textarea {
+    width: 100%;
+    font-size: 1rem;
+  }
+  img {
+    max-width: 100%;
+    border: 1px solid #ccc;
+    margin-top: 1rem;
+  }
+  .error {
+    color: red;
+  }
+}

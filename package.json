@@ -2,7 +2,7 @@
   "name": "tinysd-app",
   "version": "1.0.0",
   "scripts": {
-    "start": "concurrently \"npm run start-api\" \"npm run start-ui\"",
+    "start": "concurrently \"npm run build-api && npm run start-api\" \"npm run start-ui\"",
     "start-api": "cd tinysd-api && npm run start",
     "start-ui": "cd tinysd-ui && npm run start",
     "build-api": "cd tinysd-api && npm run build",

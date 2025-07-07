@@ -1,0 +1,15 @@
+<div class="image-generator">
+  <textarea (change)="onPromptChange($event)" placeholder="Enter your prompt..." rows="4"></textarea>
+  <button (click)="generateImage()" [disabled]="loading || !prompt.trim()">Generate Image</button>
+  @if (loading) {
+    <div>Generating...</div>
+  }
+  @if (error) {
+    <div class="error">{{ error }}</div>
+  }
+  @if (imageUrl) {
+    <div>
+      <img [src]="imageUrl" alt="Generated image" />
+    </div>
+  }
+</div>

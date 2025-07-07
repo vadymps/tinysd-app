@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { LogsComponent } from '../logs/logs';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'main-layout',
   templateUrl: `./main-layout.html`,
   styles: [],
   standalone: true,
-  imports: [LogsComponent],
+  imports: [RouterOutlet, RouterLink],
 })
 export class MainLayoutComponent {}
