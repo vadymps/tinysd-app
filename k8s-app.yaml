@@ -50,11 +50,16 @@ spec:
         app: tinysd-api
     spec:
       containers:
-        - name: tinysd-api
+        - name: angular-agent-app
           image: vadimpastushenko7/tinysd-api:${IMAGE_TAG}
           envFrom:
             - secretRef:
                 name: mongo-secret
+          env:
+            - name: DB_NAME
+              value: logsDB
+            - name: LOGS_COLLECTION_NAME
+              value: logs
           ports:
             - containerPort: 3000
 ---
