@@ -50,18 +50,11 @@ spec:
         app: tinysd-api
     spec:
       containers:
-        - name: angular-agent-app
+        - name: tinysd-api
           image: vadimpastushenko7/tinysd-api:${IMAGE_TAG}
-          env:
-            - name: DB_CONN_STRING
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: MONGO_CONNECTION_STRING
-            - name: DB_NAME
-              value: logsDB
-            - name: LOGS_COLLECTION_NAME
-              value: logs
+          envFrom:
+            - secretRef:
+                name: mongo-secret
           ports:
             - containerPort: 3000
 ---
@@ -84,6 +77,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
     - http:
         paths:
