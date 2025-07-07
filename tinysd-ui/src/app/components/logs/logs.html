@@ -1,0 +1,15 @@
+<div style="max-width:600px;margin:32px auto;">
+  <h2>Logs</h2>
+  @if (logs.length) {
+    <ul style="list-style:none;padding:0;">
+      @for (log of logs; track log) {
+        <li style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="flex:1;">{{ log.referer }} <small style="color:#888">({{ log.datetime }})</small></span>
+          <button (click)="deleteLog(log._id!)" style="color:#c00;">Delete</button>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p style="color:#888;">No logs found.</p>
+  }
+</div>
