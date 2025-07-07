@@ -62,8 +62,8 @@ spec:
               value: logsDB
             - name: LOGS_COLLECTION_NAME
               value: logs
-              ports:
-                - containerPort: 3000
+          ports:
+            - containerPort: 3000
 ---
 apiVersion: v1
 kind: Service
@@ -84,7 +84,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  Option 2: Use hostPort in the ingress controller
   rules:
     - http:
         paths:
