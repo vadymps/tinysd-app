@@ -1,13 +1,10 @@
-<div
-      style="max-width: 800px; margin: 40px auto; padding: 24px; border-radius: 12px; box-shadow: 0 2px 16px #0002; background: #fff;"
-    >
-      <h1 style="text-align:center; color:#1976d2;">TinySD UI</h1>
-      <nav style="text-align:center; margin-bottom:24px;">
-        <a routerLink="/logs" style="margin:0 12px;">Logs</a>
-        <a routerLink="/image-generator" style="margin:0 12px;">Image Generator</a>
-      </nav>
-      <div style="margin: 32px 0; text-align:center; color:#888;">
-        <p>Welcome to simple layout!</p>
-         <router-outlet #outlet="outlet"></router-outlet>
-      </div>
-    </div>
+<mat-card>
+  <h1 style="text-align:center; color:#1976d2;">TinySD UI</h1>
+  <nav style="text-align:center; margin-bottom:24px;">
+    <a routerLink="/logs" style="margin:0 12px;">Logs</a>
+    <a routerLink="/image-generator" style="margin:0 12px;">Image Generator</a>
+  </nav>
+  <div style="margin: 32px 0; text-align:center; color:#888;">
+    <router-outlet #outlet="outlet"></router-outlet>
+  </div>
+</mat-card>

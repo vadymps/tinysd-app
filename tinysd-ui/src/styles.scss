@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+$your-primary: mat.define-palette(mat.$indigo-palette);
+$your-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+$your-theme: mat.define-light-theme((
+  color: (
+    primary: $your-primary,
+    accent: $your-accent,
+  ),
+));
+
+@include mat.all-component-themes($your-theme);

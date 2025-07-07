@@ -1,6 +1,16 @@
-<div class="image-generator">
-  <textarea (change)="onPromptChange($event)" placeholder="Enter your prompt..." rows="4"></textarea>
-  <button (click)="generateImage()" [disabled]="loading || !prompt.trim()">Generate Image</button>
+<form [formGroup]="form" class="form">
+  <mat-form-field>
+    <mat-label>Prompt</mat-label>
+    <textarea matInput formControlName="prompt" placeholder="Enter your prompt..." rows="4"></textarea>
+    <mat-hint>Describe the image you want to generate.</mat-hint>
+    @if (form.get('prompt')?.hasError('required')) {
+      <mat-error>Prompt is <strong>required</strong></mat-error>
+    }
+  </mat-form-field>
+  
+  
+  <button mat-raised-button color="primary" (click)="generateImage()" [disabled]="loading || form.invalid">Generate Image</button>
+  
   @if (loading) {
     <div>Generating...</div>
   }
@@ -12,4 +22,13 @@
       <img [src]="imageUrl" alt="Generated image" />
     </div>
   }
-</div>
+</form>
+
+<section>
+  <div class="example-label">Filled</div>
+  <div class="example-button-row">
+    <button mat-raised-button>Basic</button>
+    <button mat-raised-button disabled>Disabled</button>
+    <a mat-raised-button href="https://www.google.com/" target="_blank">Link</a>
+  </div>
+</section>
