@@ -28,9 +28,9 @@ import { MongoClient, Db } from 'mongodb';
       inject: [ConfigService],
     },
     {
-      provide: 'LOGS_COLLECTION',
+      provide: 'EVENT_LOGS_COLLECTION',
       useFactory: (db: Db) => {
-        const collectionName = 'logs';
+        const collectionName = 'event_logs';
         const collection = db.collection(collectionName);
         console.log(
           `Successfully connected to collection: ${collection.collectionName}`,
@@ -66,7 +66,7 @@ import { MongoClient, Db } from 'mongodb';
   ],
   exports: [
     'DATABASE_CONNECTION',
-    'LOGS_COLLECTION',
+    'EVENT_LOGS_COLLECTION',
     'SAVED_IMAGES_COLLECTION',
     'IMAGE_SETTINGS_COLLECTION',
   ],

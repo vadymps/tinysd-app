@@ -4,7 +4,9 @@ import { CreateLogDto, UpdateLogDto } from './dto/log.dto';
 
 @Injectable()
 export class LogsService {
-  constructor(@Inject('LOGS_COLLECTION') private logsCollection: Collection) {}
+  constructor(
+    @Inject('EVENT_LOGS_COLLECTION') private logsCollection: Collection,
+  ) {}
 
   async findAll() {
     return await this.logsCollection.find({}).toArray();
