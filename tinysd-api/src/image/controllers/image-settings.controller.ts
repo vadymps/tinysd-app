@@ -8,7 +8,10 @@ import {
   Param,
 } from '@nestjs/common';
 import { ImageSettingsService } from '../services/image-settings.service';
-import { CreateImageSettingsDto, UpdateImageSettingsDto } from '../dto/image-settings.dto';
+import {
+  CreateImageSettingsDto,
+  UpdateImageSettingsDto,
+} from '../dto/image-settings.dto';
 
 @Controller('image/settings')
 export class ImageSettingsController {

@@ -9,10 +9,10 @@ async function seedImageSettings() {
   try {
     // Check if there are any existing settings
     const existingSettings = await imageSettingsService.findAll();
-    
+
     if (existingSettings.length === 0) {
       console.log('No image settings found. Creating default settings...');
-      
+
       // Create default settings
       const defaultSettings = {
         apiKey: 'fYZgDGKGGNBJfzzyZ1ZNnCg6E2CrYULxlbfmxXQwZj8XdKIlIaxbGgZuwQrE',
@@ -27,11 +27,12 @@ async function seedImageSettings() {
         isActive: true,
       };
 
-      const createdSettings = await imageSettingsService.create(defaultSettings);
+      const createdSettings =
+        await imageSettingsService.create(defaultSettings);
       console.log('Default image settings created:', createdSettings.id);
     } else {
       console.log(`Found ${existingSettings.length} existing image settings.`);
-      const activeSettings = existingSettings.find(s => s.isActive);
+      const activeSettings = existingSettings.find((s) => s.isActive);
       if (activeSettings) {
         console.log('Active settings ID:', activeSettings.id);
       } else {

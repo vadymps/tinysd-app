@@ -1,6 +1,10 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { Collection, ObjectId } from 'mongodb';
-import { CreateImageSettingsDto, UpdateImageSettingsDto, ImageSettingsDto } from '../dto/image-settings.dto';
+import {
+  CreateImageSettingsDto,
+  UpdateImageSettingsDto,
+  ImageSettingsDto,
+} from '../dto/image-settings.dto';
 import { ImageSettings } from '../entities/image-settings.entity';
 
 @Injectable()
@@ -11,8 +15,10 @@ export class ImageSettingsService {
   ) {}
 
   async getActiveSettings(): Promise<ImageSettingsDto> {
-    const settings = await this.imageSettingsCollection.findOne({ isActive: true });
-    
+    const settings = await this.imageSettingsCollection.findOne({
+      isActive: true,
+    });
+
     if (!settings) {
       // Return default settings if none found
       return this.getDefaultSettings();
@@ -23,12 +29,14 @@ export class ImageSettingsService {
 
   async findAll(): Promise<ImageSettingsDto[]> {
     const settings = await this.imageSettingsCollection.find({}).toArray();
-    return settings.map(setting => this.mapToDto(setting));
+    return settings.map((setting) => this.mapToDto(setting));
   }
 
   async findOne(id: string): Promise<ImageSettingsDto> {
     const objectId = new ObjectId(id);
-    const settings = await this.imageSettingsCollection.findOne({ _id: objectId });
+    const settings = await this.imageSettingsCollection.findOne({
+      _id: objectId,
+    });
 
     if (!settings) {
       throw new NotFoundException(`Settings with id ${id} not found`);
@@ -37,12 +45,14 @@ export class ImageSettingsService {
     return this.mapToDto(settings);
   }
 
-  async create(createImageSettingsDto: CreateImageSettingsDto): Promise<ImageSettingsDto> {
+  async create(
+    createImageSettingsDto: CreateImageSettingsDto,
+  ): Promise<ImageSettingsDto> {
     // If this is set as active, deactivate all others
     if (createImageSettingsDto.isActive) {
       await this.imageSettingsCollection.updateMany(
         {},
-        { $set: { isActive: false } }
+        { $set: { isActive: false } },
       );
     }
 
@@ -66,14 +76,17 @@ export class ImageSettingsService {
     return this.findOne(result.insertedId.toString());
   }
 
-  async update(id: string, updateImageSettingsDto: UpdateImageSettingsDto): Promise<ImageSettingsDto> {
+  async update(
+    id: string,
+    updateImageSettingsDto: UpdateImageSettingsDto,
+  ): Promise<ImageSettingsDto> {
     const objectId = new ObjectId(id);
 
     // If this is set as active, deactivate all others
     if (updateImageSettingsDto.isActive) {
       await this.imageSettingsCollection.updateMany(
         { _id: { $ne: objectId } },
-        { $set: { isActive: false } }
+        { $set: { isActive: false } },
       );
     }
 
@@ -84,7 +97,7 @@ export class ImageSettingsService {
 
     const result = await this.imageSettingsCollection.updateOne(
       { _id: objectId },
-      { $set: updateData }
+      { $set: updateData },
     );
 
     if (!result.matchedCount) {
@@ -96,7 +109,9 @@ export class ImageSettingsService {
 
   async remove(id: string): Promise<void> {
     const objectId = new ObjectId(id);
-    const result = await this.imageSettingsCollection.deleteOne({ _id: objectId });
+    const result = await this.imageSettingsCollection.deleteOne({
+      _id: objectId,
+    });
 
     if (!result.deletedCount) {
       throw new NotFoundException(`Settings with id ${id} not found`);

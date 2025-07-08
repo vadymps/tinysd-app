@@ -31,7 +31,7 @@ export class ImageService {
     try {
       // Get active settings from database
       const settings = await this.imageSettingsService.getActiveSettings();
-      
+
       const {
         prompt,
         negative_prompt = settings.defaultNegativePrompt,
