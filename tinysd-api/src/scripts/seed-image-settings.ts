@@ -15,7 +15,7 @@ async function seedImageSettings() {
 
       // Create default settings
       const defaultSettings = {
-        apiKey: 'fYZgDGKGGNBJfzzyZ1ZNnCg6E2CrYULxlbfmxXQwZj8XdKIlIaxbGgZuwQrE',
+        apiKey: 'hmW6iEQ1NbEFauqLjgONoWPZ8SILCwoHwiXlc5tmYejHVfK5i7s8VwLZaTfC',
         apiUrl: 'https://modelslab.com/api/v6/realtime/text2img',
         defaultNegativePrompt: '',
         defaultWidth: '512',
@@ -35,6 +35,13 @@ async function seedImageSettings() {
       const activeSettings = existingSettings.find((s) => s.isActive);
       if (activeSettings) {
         console.log('Active settings ID:', activeSettings.id);
+
+        // Update the active settings with the working API key
+        await imageSettingsService.update(activeSettings.id, {
+          apiKey:
+            'hmW6iEQ1NbEFauqLjgONoWPZ8SILCwoHwiXlc5tmYejHVfK5i7s8VwLZaTfC',
+        });
+        console.log('Updated active settings with working API key');
       } else {
         console.log('No active settings found. You may need to activate one.');
       }
