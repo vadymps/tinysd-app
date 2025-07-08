@@ -8,6 +8,7 @@ import { GenerateImageDto } from './dto/image.dto';
 import { SaveImageDto, SavedImageDto } from './dto/saved-image.dto';
 import { SavedImage } from './entities/saved-image.entity';
 import { LogsService } from '../logs/logs.service';
+import { ImageSettingsService } from './services/image-settings.service';
 
 @Injectable()
 export class ImageService {
@@ -16,6 +17,7 @@ export class ImageService {
   constructor(
     private readonly configService: ConfigService,
     private readonly logsService: LogsService,
+    private readonly imageSettingsService: ImageSettingsService,
     @Inject('SAVED_IMAGES_COLLECTION')
     private savedImagesCollection: Collection,
   ) {
@@ -27,33 +29,33 @@ export class ImageService {
 
   async generateImage(generateImageDto: GenerateImageDto) {
     try {
+      // Get active settings from database
+      const settings = await this.imageSettingsService.getActiveSettings();
+      
       const {
         prompt,
-        negative_prompt = '',
-        width = '512',
-        height = '512',
-        samples = '1',
-        num_inference_steps = '30',
-        guidance_scale = 7.5,
-        scheduler = 'EulerAncestralDiscrete',
-        seed = null,
+        negative_prompt = settings.defaultNegativePrompt,
+        width = settings.defaultWidth,
+        height = settings.defaultHeight,
+        samples = settings.defaultSamples,
+        num_inference_steps = settings.defaultNumInferenceSteps,
+        guidance_scale = settings.defaultGuidanceScale,
+        scheduler = settings.defaultScheduler,
+        seed = settings.defaultSeed,
       } = generateImageDto;
 
-      const response = await axios.post(
-        'https://modelslab.com/api/v6/realtime/text2img',
-        {
-          key: 'fYZgDGKGGNBJfzzyZ1ZNnCg6E2CrYULxlbfmxXQwZj8XdKIlIaxbGgZuwQrE',
-          prompt,
-          negative_prompt,
-          width,
-          height,
-          samples,
-          num_inference_steps,
-          guidance_scale,
-          scheduler,
-          seed,
-        },
-      );
+      const response = await axios.post(settings.apiUrl, {
+        key: settings.apiKey,
+        prompt,
+        negative_prompt,
+        width,
+        height,
+        samples,
+        num_inference_steps,
+        guidance_scale,
+        scheduler,
+        seed,
+      });
 
       // Log the image generation
       try {

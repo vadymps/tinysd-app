@@ -23,15 +23,7 @@ export async function connectToDatabase() {
 
   const db: mongoDB.Db = client.db(process.env.DB_NAME);
 
-  if (process.env.LOGS_COLLECTION_NAME === undefined) {
-    throw new Error(
-      'LOGS_COLLECTION_NAME is not defined in the environment variables',
-    );
-  }
-
-  const logsCollection: mongoDB.Collection = db.collection(
-    process.env.LOGS_COLLECTION_NAME,
-  );
+  const logsCollection: mongoDB.Collection = db.collection('logs');
 
   collections.logs = logsCollection;
 

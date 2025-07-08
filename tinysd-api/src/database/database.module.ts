@@ -29,23 +29,15 @@ import { MongoClient, Db } from 'mongodb';
     },
     {
       provide: 'LOGS_COLLECTION',
-      useFactory: (db: Db, configService: ConfigService) => {
-        const collectionName = configService.get<string>(
-          'LOGS_COLLECTION_NAME',
-        );
-        if (!collectionName) {
-          throw new Error(
-            'LOGS_COLLECTION_NAME is not defined in the environment variables',
-          );
-        }
-
+      useFactory: (db: Db) => {
+        const collectionName = 'logs';
         const collection = db.collection(collectionName);
         console.log(
           `Successfully connected to collection: ${collection.collectionName}`,
         );
         return collection;
       },
-      inject: ['DATABASE_CONNECTION', ConfigService],
+      inject: ['DATABASE_CONNECTION'],
     },
     {
       provide: 'SAVED_IMAGES_COLLECTION',
@@ -59,11 +51,24 @@ import { MongoClient, Db } from 'mongodb';
       },
       inject: ['DATABASE_CONNECTION'],
     },
+    {
+      provide: 'IMAGE_SETTINGS_COLLECTION',
+      useFactory: (db: Db) => {
+        const collectionName = 'image_settings';
+        const collection = db.collection(collectionName);
+        console.log(
+          `Successfully connected to collection: ${collection.collectionName}`,
+        );
+        return collection;
+      },
+      inject: ['DATABASE_CONNECTION'],
+    },
   ],
   exports: [
     'DATABASE_CONNECTION',
     'LOGS_COLLECTION',
     'SAVED_IMAGES_COLLECTION',
+    'IMAGE_SETTINGS_COLLECTION',
   ],
 })
 export class DatabaseModule {}

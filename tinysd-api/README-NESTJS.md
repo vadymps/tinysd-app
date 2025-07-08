@@ -91,8 +91,7 @@ npm run start:prod
 
 ```env
 DB_CONN_STRING=mongodb://localhost:27017
-DB_NAME=logsDB
-LOGS_COLLECTION_NAME=logs
+DB_NAME=tinysd
 PORT=3000
 ```
 
