@@ -15,6 +15,8 @@ async function seedImageSettings() {
 
       // Create default settings
       const defaultSettings = {
+        provider: 'modelslab' as any,
+        providerName: 'ModelsLab',
         apiKey: 'hmW6iEQ1NbEFauqLjgONoWPZ8SILCwoHwiXlc5tmYejHVfK5i7s8VwLZaTfC',
         apiUrl: 'https://modelslab.com/api/v6/realtime/text2img',
         defaultNegativePrompt: '',
