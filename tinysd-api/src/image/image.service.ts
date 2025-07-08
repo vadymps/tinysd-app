@@ -31,6 +31,10 @@ export class ImageService {
     try {
       // Get active settings from database
       const settings = await this.imageSettingsService.getActiveSettings();
+      console.log('Using API settings:', {
+        apiUrl: settings.apiUrl,
+        apiKey: settings.apiKey.substring(0, 10) + '...',
+      });
 
       const {
         prompt,
@@ -44,18 +48,36 @@ export class ImageService {
         seed = settings.defaultSeed,
       } = generateImageDto;
 
-      const response = await axios.post(settings.apiUrl, {
-        key: settings.apiKey,
+      console.log('Making API request with payload:', {
         prompt,
-        negative_prompt,
         width,
         height,
         samples,
-        num_inference_steps,
-        guidance_scale,
-        scheduler,
-        seed,
       });
+
+      const response = await axios.post(
+        settings.apiUrl,
+        {
+          key: settings.apiKey,
+          prompt,
+          negative_prompt,
+          width,
+          height,
+          samples,
+          num_inference_steps,
+          guidance_scale,
+          scheduler,
+          seed,
+        },
+        {
+          timeout: 30000, // 30 second timeout
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      console.log('API response received:', response.status, response.data);
 
       // Log the image generation
       try {

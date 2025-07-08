@@ -38,11 +38,11 @@ export class ImageController {
   serveImage(@Param('filename') filename: string, @Res() res: Response) {
     try {
       const imagePath = this.imageService.getSavedImagePath(filename);
-      
+
       if (!fs.existsSync(imagePath)) {
         throw new HttpException('Image not found', HttpStatus.NOT_FOUND);
       }
-      
+
       res.sendFile(imagePath);
     } catch {
       throw new HttpException('Image not found', HttpStatus.NOT_FOUND);
