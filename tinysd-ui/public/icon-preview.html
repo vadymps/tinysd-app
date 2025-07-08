@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TinySD Icon Preview</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f5f5f5;
+        }
+        .icon-preview {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            align-items: center;
+        }
+        .icon-container {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .instructions {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>TinySD - AI Image Generator Icons</h1>
+    
+    <div class="icon-preview">
+        <div class="icon-container">
+            <h3>Main Icon (32x32)</h3>
+            <img src="icon.svg" width="32" height="32" alt="TinySD Icon">
+        </div>
+        
+        <div class="icon-container">
+            <h3>Favicon (16x16)</h3>
+            <img src="favicon.svg" width="16" height="16" alt="TinySD Favicon">
+        </div>
+        
+        <div class="icon-container">
+            <h3>Favicon Alternate</h3>
+            <img src="favicon-16x16.svg" width="16" height="16" alt="TinySD Favicon Alt">
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h2>Icon Features:</h2>
+        <ul>
+            <li>🎨 <strong>Image/Picture Frame:</strong> Represents image generation</li>
+            <li>🏔️ <strong>Mountain Landscape:</strong> Classic image content</li>
+            <li>☀️ <strong>Sun/Light:</strong> Represents illumination and creativity</li>
+            <li>✨ <strong>Golden Sparkle:</strong> AI magic indicator</li>
+            <li>🤖 <strong>"AI" Text:</strong> Clear AI identification</li>
+            <li>🎯 <strong>Purple Theme:</strong> Modern, tech-friendly color (#6366f1)</li>
+        </ul>
+        
+        <h2>To Convert to ICO:</h2>
+        <ol>
+            <li>Open favicon-16x16.svg in a graphics editor (GIMP, Photoshop, etc.)</li>
+            <li>Export as PNG at 16x16 pixels</li>
+            <li>Use an online ICO converter or ImageMagick: <code>convert favicon.png favicon.ico</code></li>
+            <li>Replace the current favicon.ico file</li>
+        </ol>
+    </div>
+</body>
+</html>
