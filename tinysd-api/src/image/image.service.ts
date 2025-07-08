@@ -94,7 +94,7 @@ export class ImageService {
       return providerResponse.data;
     } catch (error: any) {
       console.error('Image generation error:', error.message);
-      
+
       // Log the general error
       try {
         const settings = await this.imageSettingsService.getActiveSettings();

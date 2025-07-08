@@ -1,66 +1,76 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Favicon Converter</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Create ICO Favicon</h1>
-    <canvas id="canvas" width="16" height="16" style="border: 1px solid #ccc; image-rendering: pixelated; width: 160px; height: 160px;"></canvas>
-    <br><br>
+    <canvas
+      id="canvas"
+      width="16"
+      height="16"
+      style="
+        border: 1px solid #ccc;
+        image-rendering: pixelated;
+        width: 160px;
+        height: 160px;
+      "
+    ></canvas>
+    <br /><br />
     <button onclick="generateIco()">Generate ICO</button>
-    <br><br>
-    <a id="downloadLink" style="display: none;">Download favicon.ico</a>
-    
+    <br /><br />
+    <a id="downloadLink" style="display: none">Download favicon.ico</a>
+
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Draw a simple 16x16 favicon
-        function drawFavicon() {
-            // Clear canvas
-            ctx.clearRect(0, 0, 16, 16);
-            
-            // Background
-            ctx.fillStyle = '#6366f1';
-            ctx.fillRect(0, 0, 16, 16);
-            
-            // White circle
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(8, 8, 6, 0, 2 * Math.PI);
-            ctx.fill();
-            
-            // Eyes
-            ctx.fillStyle = '#6366f1';
-            ctx.beginPath();
-            ctx.arc(6, 6, 1, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(10, 6, 1, 0, 2 * Math.PI);
-            ctx.fill();
-            
-            // Smile
-            ctx.strokeStyle = '#6366f1';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.arc(8, 8, 3, 0, Math.PI);
-            ctx.stroke();
-        }
-        
-        function generateIco() {
-            // Convert canvas to blob
-            canvas.toBlob(function(blob) {
-                const url = URL.createObjectURL(blob);
-                const link = document.getElementById('downloadLink');
-                link.href = url;
-                link.download = 'favicon.ico';
-                link.style.display = 'block';
-                link.textContent = 'Download favicon.ico';
-            }, 'image/x-icon');
-        }
-        
-        // Draw the favicon when page loads
-        drawFavicon();
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      // Draw a simple 16x16 favicon
+      function drawFavicon() {
+        // Clear canvas
+        ctx.clearRect(0, 0, 16, 16);
+
+        // Background
+        ctx.fillStyle = "#6366f1";
+        ctx.fillRect(0, 0, 16, 16);
+
+        // White circle
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(8, 8, 6, 0, 2 * Math.PI);
+        ctx.fill();
+
+        // Eyes
+        ctx.fillStyle = "#6366f1";
+        ctx.beginPath();
+        ctx.arc(6, 6, 1, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(10, 6, 1, 0, 2 * Math.PI);
+        ctx.fill();
+
+        // Smile
+        ctx.strokeStyle = "#6366f1";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(8, 8, 3, 0, Math.PI);
+        ctx.stroke();
+      }
+
+      function generateIco() {
+        // Convert canvas to blob
+        canvas.toBlob(function (blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.getElementById("downloadLink");
+          link.href = url;
+          link.download = "favicon.ico";
+          link.style.display = "block";
+          link.textContent = "Download favicon.ico";
+        }, "image/x-icon");
+      }
+
+      // Draw the favicon when page loads
+      drawFavicon();
     </script>
-</body>
+  </body>
 </html>
