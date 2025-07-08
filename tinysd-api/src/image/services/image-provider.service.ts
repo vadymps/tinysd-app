@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import FormData from 'form-data';
 import {
   ImageProvider,
   ImageSettings,
@@ -89,43 +88,39 @@ export class ImageProviderService {
   ): Promise<ProviderResponse> {
     const { prompt } = generateImageDto;
 
-    // Create form data payload for Stability AI
-    const payload = {
-      prompt,
-      output_format: 'webp', // Use webp for better compression
-    };
+    // Convert dimensions for Stability AI aspect ratio
+    const width = parseInt(settings.defaultWidth) || 512;
+    const height = parseInt(settings.defaultHeight) || 512;
+    let aspectRatio = '1:1'; // default
 
-    const response = await axios.postForm(
+    if (width > height) {
+      aspectRatio = width / height > 1.5 ? '16:9' : '3:2';
+    } else if (height > width) {
+      aspectRatio = height / width > 1.5 ? '9:16' : '2:3';
+    }
+
+    const response = await axios.post(
       settings.apiUrl,
-      axios.toFormData(payload, new FormData()),
       {
-        validateStatus: undefined,
-        responseType: 'arraybuffer',
+        prompt,
+        aspect_ratio: aspectRatio,
+        output_format: 'jpeg',
+      },
+      {
         timeout: 30000,
         headers: {
           Authorization: `Bearer ${settings.apiKey}`,
-          Accept: 'image/*',
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
       },
     );
 
-    if (response.status === 200) {
-      // Convert the binary image data to base64 for JSON response
-      const base64Image = Buffer.from(response.data).toString('base64');
-      const dataUrl = `data:image/webp;base64,${base64Image}`;
-
-      return {
-        success: true,
-        imageUrl: dataUrl,
-        data: {
-          image: dataUrl,
-          format: 'webp',
-          size: response.data.byteLength,
-        },
-      };
-    } else {
-      const errorText = Buffer.from(response.data).toString();
-      throw new Error(`${response.status}: ${errorText}`);
-    }
+    return {
+      success: true,
+      imageUrl:
+        response.data?.image || response.data?.artifacts?.[0]?.base64 || '',
+      data: response.data,
+    };
   }
 }
