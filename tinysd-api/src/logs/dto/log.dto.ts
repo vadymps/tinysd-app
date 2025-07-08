@@ -6,6 +6,21 @@ export class CreateLogDto {
 
   @IsNumber()
   datetime: number;
+
+  @IsString()
+  action: string; // 'generate' | 'save' | 'delete' | 'view'
+
+  @IsOptional()
+  @IsString()
+  prompt?: string;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  imageName?: string;
 }
 
 export class UpdateLogDto {
@@ -16,4 +31,20 @@ export class UpdateLogDto {
   @IsOptional()
   @IsNumber()
   datetime?: number;
+
+  @IsOptional()
+  @IsString()
+  action?: string;
+
+  @IsOptional()
+  @IsString()
+  prompt?: string;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  imageName?: string;
 }

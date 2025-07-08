@@ -15,3 +15,20 @@
 .nx-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #1976d2;
 }
+
+.log-item {
+  transition: box-shadow 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.log-content {
+  min-width: 0; // Ensures flexbox child can shrink
+}
+
+.log-prompt {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}

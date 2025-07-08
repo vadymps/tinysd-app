@@ -1,31 +1,77 @@
-<div style="max-width: 600px; margin: 32px auto">
-  <h2>Logs</h2>
+<div style="max-width: 800px; margin: 32px auto">
+  <h2>Activity Logs</h2>
   @if (logs.length) {
   <div
     class="nx-scrollbar"
-    style="max-height: 320px; overflow: auto; padding: 12px 16px 12px 12px"
+    style="max-height: 400px; overflow: auto; padding: 12px 16px 12px 12px"
   >
     <ul style="list-style: none; padding: 0; margin: 0">
       @for (log of logs; track log) {
       <li
-        style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px"
+        class="log-item"
+        style="
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          margin-bottom: 16px;
+          padding: 12px;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          background: #fafafa;
+        "
       >
-        <span style="flex: 1"
-          >{{ log.referer }}
-          <small style="color: #888">({{ log.datetime }})</small></span
-        >
+        <div class="log-icon" style="margin-top: 4px">
+          @if (log.action === 'generate') {
+          <mat-icon style="color: #2196f3">image</mat-icon>
+          } @else if (log.action === 'save') {
+          <mat-icon style="color: #4caf50">save</mat-icon>
+          } @else if (log.action === 'delete') {
+          <mat-icon style="color: #f44336">delete</mat-icon>
+          } @else {
+          <mat-icon style="color: #757575">info</mat-icon>
+          }
+        </div>
+        <div class="log-content" style="flex: 1">
+          <div class="log-action" style="font-weight: 500; margin-bottom: 4px">
+            @if (log.action === 'generate') {
+            <span>Generated Image</span>
+            } @else if (log.action === 'save') {
+            <span>Saved Image</span>
+            } @else if (log.action === 'delete') {
+            <span>Deleted Image</span>
+            } @else {
+            <span>{{ log.action | titlecase }}</span>
+            }
+          </div>
+          @if (log.prompt) {
+          <div class="log-prompt" style="margin-bottom: 4px; color: #333">
+            <strong>Prompt:</strong> {{ log.prompt }}
+          </div>
+          } @if (log.imageName) {
+          <div
+            class="log-image"
+            style="margin-bottom: 4px; color: #666; font-size: 0.9em"
+          >
+            <strong>Image:</strong> {{ log.imageName }}
+          </div>
+          }
+          <div class="log-timestamp" style="color: #888; font-size: 0.85em">
+            {{ formatTimestamp(log.datetime) }}
+          </div>
+        </div>
         <button
-          matButton="elevated"
+          mat-icon-button
           (click)="deleteLog(log._id!)"
           style="color: #c00"
+          title="Delete log"
         >
-          Delete
+          <mat-icon>delete</mat-icon>
         </button>
       </li>
       }
     </ul>
   </div>
   } @else {
-  <p style="color: #888">No logs found.</p>
+  <p style="color: #888">No activity logs found.</p>
   }
 </div>

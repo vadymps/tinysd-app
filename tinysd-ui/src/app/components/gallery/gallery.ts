@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { ImageService, SavedImage } from '../../services/image.service';
+import { LogService } from '../../services/log.service';
 
 @Component({
   selector: 'app-gallery',
@@ -27,12 +28,28 @@ export class GalleryComponent implements OnInit {
 
   constructor(
     private imageService: ImageService,
+    private logService: LogService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {}
 
   ngOnInit() {
-    this.loadImages();
+    // Log gallery view
+    this.logService
+      .create({
+        referer: 'Gallery',
+        datetime: Date.now(),
+        action: 'view',
+      })
+      .subscribe({
+        next: () => {
+          this.loadImages();
+        },
+        error: (err) => {
+          console.error('Failed to log gallery view:', err);
+          this.loadImages(); // Still load images even if logging fails
+        },
+      });
   }
 
   loadImages() {

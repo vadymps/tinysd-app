@@ -6,6 +6,10 @@ export interface Log {
   _id?: string;
   referer: string;
   datetime: number;
+  action: string; // 'generate' | 'save' | 'delete' | 'view'
+  prompt?: string;
+  imageUrl?: string;
+  imageName?: string;
 }
 
 @Injectable({ providedIn: 'root' })

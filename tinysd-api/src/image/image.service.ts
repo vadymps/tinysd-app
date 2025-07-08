@@ -7,6 +7,7 @@ import * as path from 'path';
 import { GenerateImageDto } from './dto/image.dto';
 import { SaveImageDto, SavedImageDto } from './dto/saved-image.dto';
 import { SavedImage } from './entities/saved-image.entity';
+import { LogsService } from '../logs/logs.service';
 
 @Injectable()
 export class ImageService {
@@ -14,6 +15,7 @@ export class ImageService {
 
   constructor(
     private readonly configService: ConfigService,
+    private readonly logsService: LogsService,
     @Inject('SAVED_IMAGES_COLLECTION')
     private savedImagesCollection: Collection,
   ) {
@@ -53,6 +55,20 @@ export class ImageService {
         },
       );
 
+      // Log the image generation
+      try {
+        await this.logsService.create({
+          referer: 'Image Generator',
+          datetime: Date.now(),
+          action: 'generate',
+          prompt,
+          imageUrl: response.data?.output?.[0] || '',
+        });
+      } catch (logError) {
+        // Don't fail the image generation if logging fails
+        console.error('Failed to log image generation:', logError);
+      }
+
       return response.data;
     } catch (error: any) {
       throw new HttpException(
@@ -90,6 +106,21 @@ export class ImageService {
       );
 
       const result = await this.savedImagesCollection.insertOne(savedImage);
+
+      // Log the image save
+      try {
+        await this.logsService.create({
+          referer: 'Image Gallery',
+          datetime: Date.now(),
+          action: 'save',
+          prompt,
+          imageUrl,
+          imageName: filename,
+        });
+      } catch (logError) {
+        // Don't fail the save if logging fails
+        console.error('Failed to log image save:', logError);
+      }
 
       return {
         id: result.insertedId.toString(),
@@ -145,6 +176,20 @@ export class ImageService {
 
       // Delete from database
       await this.savedImagesCollection.deleteOne({ _id: objectId });
+
+      // Log the image deletion
+      try {
+        await this.logsService.create({
+          referer: 'Image Gallery',
+          datetime: Date.now(),
+          action: 'delete',
+          prompt: savedImage.prompt,
+          imageName: savedImage.filename,
+        });
+      } catch (logError) {
+        // Don't fail the delete if logging fails
+        console.error('Failed to log image deletion:', logError);
+      }
     } catch (error: any) {
       throw new HttpException(
         error.message || 'Failed to delete image',
