@@ -7,4 +7,4 @@ RUN npm ci --omit=dev && npm cache clean --force
 COPY dist ./dist
 
 EXPOSE 3000
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
