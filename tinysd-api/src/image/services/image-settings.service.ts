@@ -5,7 +5,10 @@ import {
   UpdateImageSettingsDto,
   ImageSettingsDto,
 } from '../dto/image-settings.dto';
-import { ImageSettings } from '../entities/image-settings.entity';
+import {
+  ImageSettings,
+  ImageProvider,
+} from '../entities/image-settings.entity';
 
 @Injectable()
 export class ImageSettingsService {
@@ -57,6 +60,8 @@ export class ImageSettingsService {
     }
 
     const settings = new ImageSettings(
+      createImageSettingsDto.provider,
+      createImageSettingsDto.providerName,
       createImageSettingsDto.apiKey,
       createImageSettingsDto.apiUrl,
       createImageSettingsDto.defaultNegativePrompt || '',
@@ -121,6 +126,8 @@ export class ImageSettingsService {
   private mapToDto(settings: any): ImageSettingsDto {
     return {
       id: settings._id.toString(),
+      provider: settings.provider,
+      providerName: settings.providerName,
       apiKey: settings.apiKey,
       apiUrl: settings.apiUrl,
       defaultNegativePrompt: settings.defaultNegativePrompt,
@@ -140,6 +147,8 @@ export class ImageSettingsService {
   private getDefaultSettings(): ImageSettingsDto {
     return {
       id: 'default',
+      provider: ImageProvider.MODELSLAB,
+      providerName: 'ModelsLab',
       apiKey: 'fYZgDGKGGNBJfzzyZ1ZNnCg6E2CrYULxlbfmxXQwZj8XdKIlIaxbGgZuwQrE',
       apiUrl: 'https://modelslab.com/api/v6/realtime/text2img',
       defaultNegativePrompt: '',

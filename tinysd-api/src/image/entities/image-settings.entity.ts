@@ -1,7 +1,16 @@
 import { ObjectId } from 'mongodb';
 
+export enum ImageProvider {
+  MODELSLAB = 'modelslab',
+  STABILITY_AI = 'stability_ai',
+  OPENAI_DALLE = 'openai_dalle',
+  REPLICATE = 'replicate',
+}
+
 export class ImageSettings {
   constructor(
+    public provider: ImageProvider,
+    public providerName: string,
     public apiKey: string,
     public apiUrl: string,
     public defaultNegativePrompt: string,

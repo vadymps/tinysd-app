@@ -1,4 +1,10 @@
-import { Injectable, HttpException, HttpStatus, Inject, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Collection, ObjectId } from 'mongodb';
 import axios from 'axios';
@@ -9,6 +15,7 @@ import { SaveImageDto, SavedImageDto } from './dto/saved-image.dto';
 import { SavedImage } from './entities/saved-image.entity';
 import { LogsService } from '../logs/logs.service';
 import { ImageSettingsService } from './services/image-settings.service';
+import { ImageProviderService } from './services/image-provider.service';
 
 @Injectable()
 export class ImageService {
@@ -18,6 +25,7 @@ export class ImageService {
     private readonly configService: ConfigService,
     private readonly logsService: LogsService,
     private readonly imageSettingsService: ImageSettingsService,
+    private readonly imageProviderService: ImageProviderService,
     @Inject('SAVED_IMAGES_COLLECTION')
     private savedImagesCollection: Collection,
   ) {
@@ -31,53 +39,27 @@ export class ImageService {
     try {
       // Get active settings from database
       const settings = await this.imageSettingsService.getActiveSettings();
-      console.log('Using API settings:', {
+      console.log('Using provider:', {
+        provider: settings.provider,
+        providerName: settings.providerName,
         apiUrl: settings.apiUrl,
         apiKey: settings.apiKey.substring(0, 10) + '...',
       });
 
-      const {
-        prompt,
-        negative_prompt = settings.defaultNegativePrompt,
-        width = settings.defaultWidth,
-        height = settings.defaultHeight,
-        samples = settings.defaultSamples,
-        num_inference_steps = settings.defaultNumInferenceSteps,
-        guidance_scale = settings.defaultGuidanceScale,
-        scheduler = settings.defaultScheduler,
-        seed = settings.defaultSeed,
-      } = generateImageDto;
-
-      console.log('Making API request with payload:', {
-        prompt,
-        width,
-        height,
-        samples,
-      });
-
-      const response = await axios.post(
-        settings.apiUrl,
-        {
-          key: settings.apiKey,
-          prompt,
-          negative_prompt,
-          width,
-          height,
-          samples,
-          num_inference_steps,
-          guidance_scale,
-          scheduler,
-          seed,
-        },
-        {
-          timeout: 30000, // 30 second timeout
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
+      // Use the provider service to generate the image
+      const providerResponse = await this.imageProviderService.generateImage(
+        settings,
+        generateImageDto,
       );
 
-      console.log('API response received:', response.status, response.data);
+      if (!providerResponse.success) {
+        throw new Error(providerResponse.error || 'Image generation failed');
+      }
+
+      console.log(
+        'Image generated successfully with provider:',
+        settings.provider,
+      );
 
       // Log the image generation
       try {
@@ -85,16 +67,17 @@ export class ImageService {
           referer: 'Image Generator',
           datetime: Date.now(),
           action: 'generate',
-          prompt,
-          imageUrl: response.data?.output?.[0] || '',
+          prompt: generateImageDto.prompt,
+          imageUrl: providerResponse.imageUrl || '',
         });
       } catch (logError) {
         // Don't fail the image generation if logging fails
         console.error('Failed to log image generation:', logError);
       }
 
-      return response.data;
+      return providerResponse.data;
     } catch (error: any) {
+      console.error('Image generation error:', error.message);
       throw new HttpException(
         error.message || 'Failed to generate image',
         HttpStatus.INTERNAL_SERVER_ERROR,

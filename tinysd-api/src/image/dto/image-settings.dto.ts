@@ -1,6 +1,19 @@
-import { IsString, IsNumber, IsBoolean, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsBoolean,
+  IsOptional,
+  IsEnum,
+} from 'class-validator';
+import { ImageProvider } from '../entities/image-settings.entity';
 
 export class CreateImageSettingsDto {
+  @IsEnum(ImageProvider)
+  provider: ImageProvider;
+
+  @IsString()
+  providerName: string;
+
   @IsString()
   apiKey: string;
 
@@ -45,6 +58,14 @@ export class CreateImageSettingsDto {
 }
 
 export class UpdateImageSettingsDto {
+  @IsOptional()
+  @IsEnum(ImageProvider)
+  provider?: ImageProvider;
+
+  @IsOptional()
+  @IsString()
+  providerName?: string;
+
   @IsOptional()
   @IsString()
   apiKey?: string;
@@ -92,6 +113,8 @@ export class UpdateImageSettingsDto {
 
 export class ImageSettingsDto {
   id: string;
+  provider: ImageProvider;
+  providerName: string;
   apiKey: string;
   apiUrl: string;
   defaultNegativePrompt: string;

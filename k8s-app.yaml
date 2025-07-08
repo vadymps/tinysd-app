@@ -118,7 +118,7 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: /tmp/tinysd-images
+    path: /data/tinysd-images
     type: DirectoryOrCreate
 ---
 apiVersion: v1
