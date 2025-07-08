@@ -77,13 +77,16 @@ export class ImageService {
       let responseData = providerResponse.data;
 
       // If the response contains a base64 data URL, save it as a file
-      if (providerResponse.imageUrl && providerResponse.imageUrl.startsWith('data:')) {
+      if (
+        providerResponse.imageUrl &&
+        providerResponse.imageUrl.startsWith('data:')
+      ) {
         const result = await this.saveBase64Image(providerResponse.imageUrl);
         imageUrl = result.imageUrl;
         responseData = {
           ...providerResponse.data,
           imageUrl: result.imageUrl,
-          output: [result.imageUrl] // For compatibility with existing UI
+          output: [result.imageUrl], // For compatibility with existing UI
         };
       }
 
