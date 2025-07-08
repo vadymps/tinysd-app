@@ -53,6 +53,22 @@ export class ImageService {
       );
 
       if (!providerResponse.success) {
+        // Log the API error
+        try {
+          await this.logsService.create({
+            referer: 'Image Generator',
+            datetime: Date.now(),
+            action: 'api_error',
+            prompt: generateImageDto.prompt,
+            imageUrl: '',
+            error: providerResponse.error,
+            provider: settings.provider,
+            providerName: settings.providerName,
+          });
+        } catch (logError) {
+          console.error('Failed to log API error:', logError);
+        }
+
         throw new Error(providerResponse.error || 'Image generation failed');
       }
 
@@ -78,6 +94,24 @@ export class ImageService {
       return providerResponse.data;
     } catch (error: any) {
       console.error('Image generation error:', error.message);
+      
+      // Log the general error
+      try {
+        const settings = await this.imageSettingsService.getActiveSettings();
+        await this.logsService.create({
+          referer: 'Image Generator',
+          datetime: Date.now(),
+          action: 'generation_error',
+          prompt: generateImageDto.prompt,
+          imageUrl: '',
+          error: error.message || 'Unknown error',
+          provider: settings.provider,
+          providerName: settings.providerName,
+        });
+      } catch (logError) {
+        console.error('Failed to log generation error:', logError);
+      }
+
       throw new HttpException(
         error.message || 'Failed to generate image',
         HttpStatus.INTERNAL_SERVER_ERROR,

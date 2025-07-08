@@ -8,7 +8,7 @@ export class CreateLogDto {
   datetime: number;
 
   @IsString()
-  action: string; // 'generate' | 'save' | 'delete' | 'view'
+  action: string; // 'generate' | 'save' | 'delete' | 'view' | 'api_error'
 
   @IsOptional()
   @IsString()
@@ -21,6 +21,18 @@ export class CreateLogDto {
   @IsOptional()
   @IsString()
   imageName?: string;
+
+  @IsOptional()
+  @IsString()
+  error?: string;
+
+  @IsOptional()
+  @IsString()
+  provider?: string;
+
+  @IsOptional()
+  @IsString()
+  providerName?: string;
 }
 
 export class UpdateLogDto {
@@ -47,4 +59,16 @@ export class UpdateLogDto {
   @IsOptional()
   @IsString()
   imageName?: string;
+
+  @IsOptional()
+  @IsString()
+  error?: string;
+
+  @IsOptional()
+  @IsString()
+  provider?: string;
+
+  @IsOptional()
+  @IsString()
+  providerName?: string;
 }
