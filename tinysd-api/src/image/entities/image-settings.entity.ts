@@ -5,6 +5,8 @@ export enum ImageProvider {
   STABILITY_AI = 'stability_ai',
   OPENAI_DALLE = 'openai_dalle',
   REPLICATE = 'replicate',
+  GOOGLE_GEMINI = 'google_gemini',
+  HUGGINGFACE_INFERENCE = 'huggingface_inference',
 }
 
 export class ImageSettings {

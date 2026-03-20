@@ -43,8 +43,4 @@ nx-out/
 
 # Ignore local env files
 *.local.env
-tinysd-api/saved-images/generated_1774008053979.png
-tinysd-api/saved-images/generated_1774008075851.png
-tinysd-api/saved-images/generated_1774009259877.png
-tinysd-api/saved-images/image_1774008078161.jpg
-tinysd-api/saved-images/image_1774009261806.jpg
+tinysd-api/saved-images/*

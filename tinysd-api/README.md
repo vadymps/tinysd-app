@@ -2,6 +2,13 @@
 
 Backend API for the TinySD application.
 
+## Supported Providers
+
+- `modelslab`
+- `stability_ai`
+- `google_gemini`
+- `huggingface_inference`
+
 ## Setup
 
 ```bash
