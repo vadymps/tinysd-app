@@ -56,7 +56,8 @@ export class ImageGeneratorComponent {
     
     this.imageService.generateImage(prompt).subscribe({
       next: (res) => {
-        this.imageUrl = res?.output?.[0] || null;
+        const rawUrl = res?.imageUrl || res?.output?.[0] || null;
+        this.imageUrl = this.normalizeImageUrl(rawUrl);
         this.loading = false;
       },
       error: (err) => {
@@ -64,6 +65,15 @@ export class ImageGeneratorComponent {
         this.loading = false;
       },
     });
+  }
+
+  private normalizeImageUrl(url: string | null): string | null {
+    if (!url) return null;
+    // If backend returns localhost (common in dev), rewrite to current origin
+    if (url.startsWith('http://localhost:3000/')) {
+      return url.replace('http://localhost:3000', window.location.origin);
+    }
+    return url;
   }
 
   saveImage() {

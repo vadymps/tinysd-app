@@ -114,11 +114,21 @@ export class ImageService {
   async saveImage(saveImageDto: SaveImageDto): Promise<SavedImageDto> {
     try {
       const { imageUrl, prompt } = saveImageDto;
-      let buffer: Buffer;
+      let buffer: Buffer | null = null;
       let filename: string;
       let localPath: string;
 
-      if (imageUrl.startsWith('data:')) {
+      if (imageUrl.startsWith('/api/image/generated/')) {
+        // Image already saved locally by generator
+        filename = imageUrl.split('/').pop() || '';
+        if (!filename) {
+          throw new Error('Invalid generated image URL');
+        }
+        localPath = path.join(this.imagesDir, filename);
+        if (!fs.existsSync(localPath)) {
+          throw new Error('Generated image not found on disk');
+        }
+      } else if (imageUrl.startsWith('data:')) {
         // Handle base64 data URL
         const matches = imageUrl.match(/^data:image\/([a-zA-Z]*);base64,(.+)$/);
         if (!matches) {
@@ -146,8 +156,10 @@ export class ImageService {
         localPath = path.join(this.imagesDir, filename);
       }
 
-      // Save file to disk
-      fs.writeFileSync(localPath, buffer);
+      // Save file to disk if we generated a new buffer
+      if (buffer) {
+        fs.writeFileSync(localPath, buffer);
+      }
 
       // Save metadata to database
       const savedImage = new SavedImage(
@@ -279,8 +291,8 @@ export class ImageService {
 
       console.log(`Saved base64 image to: ${filePath}`);
 
-      // Return the URL that can be served by the static file endpoint
-      const imageUrl = `http://localhost:3000/api/image/generated/${filename}`;
+      // Return a relative URL so it works from any client origin
+      const imageUrl = `/api/image/generated/${filename}`;
 
       return Promise.resolve({
         imageUrl,
