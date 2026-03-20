@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import {
   FormBuilder,
   FormGroup,
@@ -38,7 +37,6 @@ export class ImageGeneratorComponent {
   currentPrompt: string = '';
 
   constructor(
-    private http: HttpClient, 
     private fb: FormBuilder,
     private imageService: ImageService,
     private snackBar: MatSnackBar

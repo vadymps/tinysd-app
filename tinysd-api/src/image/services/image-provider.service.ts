@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
+import FormData from 'form-data';
 import {
   ImageProvider,
   ImageSettings,
@@ -99,27 +100,31 @@ export class ImageProviderService {
       aspectRatio = height / width > 1.5 ? '9:16' : '2:3';
     }
 
-    const response = await axios.post(
-      settings.apiUrl,
-      {
-        prompt,
-        aspect_ratio: aspectRatio,
-        output_format: 'jpeg',
+    const form = new FormData();
+    form.append('prompt', prompt);
+    form.append('aspect_ratio', aspectRatio);
+    form.append('output_format', 'png');
+
+    const response = await axios.post(settings.apiUrl, form, {
+      timeout: 30000,
+      headers: {
+        Authorization: `Bearer ${settings.apiKey}`,
+        Accept: 'application/json',
+        ...form.getHeaders(),
       },
-      {
-        timeout: 30000,
-        headers: {
-          Authorization: `Bearer ${settings.apiKey}`,
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      },
-    );
+    });
+
+    const rawBase64 =
+      response.data?.image || response.data?.artifacts?.[0]?.base64 || '';
+    const normalizedImageUrl = rawBase64
+      ? rawBase64.startsWith('data:')
+        ? rawBase64
+        : `data:image/png;base64,${rawBase64}`
+      : '';
 
     return {
       success: true,
-      imageUrl:
-        response.data?.image || response.data?.artifacts?.[0]?.base64 || '',
+      imageUrl: normalizedImageUrl,
       data: response.data,
     };
   }

@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import * as fs from 'fs';
-import { ImageService } from './image.service';
-import { GenerateImageDto } from './dto/image.dto';
-import { SaveImageDto } from './dto/saved-image.dto';
+import { ImageService } from '../services/image.service';
+import { GenerateImageDto } from '../dto/image.dto';
+import { SaveImageDto } from '../dto/saved-image.dto';
 
 @Controller('image')
 export class ImageController {

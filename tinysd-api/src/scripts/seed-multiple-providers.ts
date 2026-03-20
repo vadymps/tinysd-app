@@ -23,7 +23,7 @@ async function seedMultipleProviders() {
       {
         provider: 'modelslab',
         providerName: 'ModelsLab',
-        apiKey: 'b58gdMaF3Dky32IuLiM9zh0ojgRsMXfcJGZkWhzZP35n0Z6aKlHHfw2sjDVe',
+        apiKey: 'YOUR_MODELSLAB_API_KEY_HERE',
         apiUrl: 'https://modelslab.com/api/v6/realtime/text2img',
         defaultNegativePrompt: '',
         defaultWidth: '512',
@@ -40,7 +40,7 @@ async function seedMultipleProviders() {
       {
         provider: 'stability_ai',
         providerName: 'Stability AI',
-        apiKey: 'YOUR_STABILITY_AI_API_KEY_HERE', // User needs to replace this
+        apiKey: 'YOUR_STABILITY_AI_API_KEY_HERE',
         apiUrl: 'https://api.stability.ai/v2beta/stable-image/generate/core',
         defaultNegativePrompt: '',
         defaultWidth: '1024',

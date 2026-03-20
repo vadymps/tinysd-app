@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ImageController } from './image.controller';
-import { ImageService } from './image.service';
+import { ImageController } from './controllers/image.controller';
+import { ImageService } from './services/image.service';
 import { ImageSettingsController } from './controllers/image-settings.controller';
 import { ImageSettingsService } from './services/image-settings.service';
 import { ImageProviderService } from './services/image-provider.service';

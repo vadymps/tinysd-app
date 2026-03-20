@@ -76,6 +76,6 @@ metadata:
   name: mongo-secret
 type: Opaque
 data:
-  DB_CONN_STRING: bW9uZ29kYjovL2FkbWluOmFkbWluQDE5Mi4xNjguNTYuMTA6MzIwMTc=
-  ROOT_USERNAME: YWRtaW4=
-  ROOT_PASSWORD: YWRtaW4=
+  DB_CONN_STRING: <base64_encoded_connection_string>
+  ROOT_USERNAME: <base64_encoded_username>
+  ROOT_PASSWORD: <base64_encoded_password>

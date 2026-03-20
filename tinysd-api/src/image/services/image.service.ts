@@ -1,28 +1,20 @@
-import {
-  Injectable,
-  HttpException,
-  HttpStatus,
-  Inject,
-  Logger,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { Collection, ObjectId } from 'mongodb';
 import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
-import { GenerateImageDto } from './dto/image.dto';
-import { SaveImageDto, SavedImageDto } from './dto/saved-image.dto';
-import { SavedImage } from './entities/saved-image.entity';
-import { LogsService } from '../logs/logs.service';
-import { ImageSettingsService } from './services/image-settings.service';
-import { ImageProviderService } from './services/image-provider.service';
+import { GenerateImageDto } from '../dto/image.dto';
+import { SaveImageDto, SavedImageDto } from '../dto/saved-image.dto';
+import { SavedImage } from '../entities/saved-image.entity';
+import { LogsService } from '../../logs/services/logs.service';
+import { ImageSettingsService } from './image-settings.service';
+import { ImageProviderService } from './image-provider.service';
 
 @Injectable()
 export class ImageService {
   private readonly imagesDir = path.join(process.cwd(), 'saved-images');
 
   constructor(
-    private readonly configService: ConfigService,
     private readonly logsService: LogsService,
     private readonly imageSettingsService: ImageSettingsService,
     private readonly imageProviderService: ImageProviderService,
