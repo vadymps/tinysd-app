@@ -3,6 +3,7 @@ import { Collection, ObjectId } from 'mongodb';
 import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
+import { v2 as cloudinary } from 'cloudinary';
 import { GenerateImageDto } from '../dto/image.dto';
 import { SaveImageDto, SavedImageDto } from '../dto/saved-image.dto';
 import { SavedImage } from '../entities/saved-image.entity';
@@ -13,6 +14,8 @@ import { ImageProviderService } from './image-provider.service';
 @Injectable()
 export class ImageService {
   private readonly imagesDir = path.join(process.cwd(), 'saved-images');
+  private readonly cloudinaryEnabled: boolean;
+  private readonly cloudinaryFolder?: string;
 
   constructor(
     private readonly logsService: LogsService,
@@ -21,6 +24,16 @@ export class ImageService {
     @Inject('SAVED_IMAGES_COLLECTION')
     private savedImagesCollection: Collection,
   ) {
+    this.cloudinaryEnabled = this.hasCloudinaryConfig();
+    this.cloudinaryFolder = process.env.CLOUDINARY_FOLDER?.trim() || undefined;
+    if (this.cloudinaryEnabled) {
+      cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+      });
+    }
+
     // Ensure images directory exists
     if (!fs.existsSync(this.imagesDir)) {
       fs.mkdirSync(this.imagesDir, { recursive: true });
@@ -117,6 +130,7 @@ export class ImageService {
       let buffer: Buffer | null = null;
       let filename: string;
       let localPath: string;
+      let isCloudinary = false;
 
       if (imageUrl.startsWith('/api/image/generated/')) {
         // Image already saved locally by generator
@@ -127,6 +141,13 @@ export class ImageService {
         localPath = path.join(this.imagesDir, filename);
         if (!fs.existsSync(localPath)) {
           throw new Error('Generated image not found on disk');
+        }
+        if (this.cloudinaryEnabled) {
+          const publicId = `saved_${Date.now()}`;
+          const uploadResult = await this.uploadToCloudinary(localPath, publicId);
+          filename = uploadResult.public_id;
+          localPath = uploadResult.secure_url;
+          isCloudinary = true;
         }
       } else if (imageUrl.startsWith('data:')) {
         // Handle base64 data URL
@@ -143,17 +164,34 @@ export class ImageService {
         const timestamp = Date.now();
         filename = `image_${timestamp}.${format}`;
         localPath = path.join(this.imagesDir, filename);
+
+        if (this.cloudinaryEnabled) {
+          const dataUrl = `data:image/${format};base64,${base64Data}`;
+          const publicId = `saved_${timestamp}`;
+          const uploadResult = await this.uploadToCloudinary(dataUrl, publicId);
+          filename = uploadResult.public_id;
+          localPath = uploadResult.secure_url;
+          isCloudinary = true;
+          buffer = null;
+        }
       } else {
         // Handle regular URL
-        const response = await axios.get(imageUrl, {
-          responseType: 'arraybuffer',
-        });
-        buffer = Buffer.from(response.data);
-
-        // Generate filename
         const timestamp = Date.now();
         filename = `image_${timestamp}.jpg`;
         localPath = path.join(this.imagesDir, filename);
+
+        if (this.cloudinaryEnabled) {
+          const publicId = `saved_${timestamp}`;
+          const uploadResult = await this.uploadToCloudinary(imageUrl, publicId);
+          filename = uploadResult.public_id;
+          localPath = uploadResult.secure_url;
+          isCloudinary = true;
+        } else {
+          const response = await axios.get(imageUrl, {
+            responseType: 'arraybuffer',
+          });
+          buffer = Buffer.from(response.data);
+        }
       }
 
       // Save file to disk if we generated a new buffer
@@ -193,7 +231,7 @@ export class ImageService {
         originalUrl: imageUrl,
         prompt,
         savedAt: savedImage.savedAt,
-        localPath: `/api/image/saved/${filename}`,
+        localPath: isCloudinary ? localPath : `/api/image/saved/${filename}`,
       };
     } catch (error: any) {
       throw new HttpException(
@@ -213,7 +251,11 @@ export class ImageService {
         originalUrl: img.originalUrl,
         prompt: img.prompt,
         savedAt: img.savedAt,
-        localPath: `/api/image/saved/${img.filename}`,
+        localPath:
+          img.localPath?.startsWith('http://') ||
+          img.localPath?.startsWith('https://')
+            ? img.localPath
+            : `/api/image/saved/${img.filename}`,
       }));
     } catch (error: any) {
       throw new HttpException(
@@ -234,9 +276,23 @@ export class ImageService {
         throw new HttpException('Image not found', HttpStatus.NOT_FOUND);
       }
 
-      // Delete file from disk
-      if (fs.existsSync(savedImage.localPath)) {
-        fs.unlinkSync(savedImage.localPath);
+      const isRemote =
+        savedImage.localPath?.startsWith('http://') ||
+        savedImage.localPath?.startsWith('https://');
+
+      if (isRemote) {
+        if (!this.cloudinaryEnabled) {
+          throw new HttpException(
+            'Cloudinary is not configured to delete this image',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+        await cloudinary.uploader.destroy(savedImage.filename);
+      } else {
+        // Delete file from disk
+        if (fs.existsSync(savedImage.localPath)) {
+          fs.unlinkSync(savedImage.localPath);
+        }
       }
 
       // Delete from database
@@ -267,7 +323,7 @@ export class ImageService {
     return path.join(this.imagesDir, filename);
   }
 
-  private saveBase64Image(
+  private async saveBase64Image(
     dataUrl: string,
   ): Promise<{ imageUrl: string; format: string }> {
     try {
@@ -280,8 +336,18 @@ export class ImageService {
       const format = matches[1]; // webp, jpeg, png, etc.
       const base64Data = matches[2];
 
-      // Generate filename
       const timestamp = Date.now();
+
+      if (this.cloudinaryEnabled) {
+        const publicId = `generated_${timestamp}`;
+        const uploadResult = await this.uploadToCloudinary(dataUrl, publicId);
+        return {
+          imageUrl: uploadResult.secure_url,
+          format,
+        };
+      }
+
+      // Generate filename
       const filename = `generated_${timestamp}.${format}`;
       const filePath = path.join(this.imagesDir, filename);
 
@@ -294,13 +360,40 @@ export class ImageService {
       // Return a relative URL so it works from any client origin
       const imageUrl = `/api/image/generated/${filename}`;
 
-      return Promise.resolve({
+      return {
         imageUrl,
         format,
-      });
+      };
     } catch (error) {
       console.error('Error saving base64 image:', error);
       throw new Error('Failed to save generated image');
     }
+  }
+
+  private hasCloudinaryConfig(): boolean {
+    return Boolean(
+      process.env.CLOUDINARY_CLOUD_NAME &&
+        process.env.CLOUDINARY_API_KEY &&
+        process.env.CLOUDINARY_API_SECRET,
+    );
+  }
+
+  private async uploadToCloudinary(
+    source: string,
+    publicId: string,
+  ): Promise<{ public_id: string; secure_url: string }> {
+    const options: Record<string, string> = {
+      public_id: publicId,
+    };
+
+    if (this.cloudinaryFolder) {
+      options.folder = this.cloudinaryFolder;
+    }
+
+    const result = await cloudinary.uploader.upload(source, options);
+    return {
+      public_id: result.public_id,
+      secure_url: result.secure_url,
+    };
   }
 }
