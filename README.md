@@ -121,6 +121,13 @@ kubectl apply -f k8s-db.yaml
 kubectl apply -f k8s-app.yaml
 ```
 
+### Example to run locally
+
+```bash
+export IMAGE_TAG=1.0.0-70-ga92d75a
+envsubst < k8s-app.yaml | kubectl apply -f -
+```
+
 ## Environment Variables
 
 ### API Environment Variables
@@ -134,8 +141,8 @@ kubectl apply -f k8s-app.yaml
 The application expects a Kubernetes secret named `mongo-secret` with:
 
 - `DB_CONN_STRING`: Base64 encoded connection string
-- `ROOT_USERNAME`: Base64 encoded username
-- `ROOT_PASSWORD`: Base64 encoded password
+- `DB_ROOT_USERNAME`: Base64 encoded username
+- `DB_ROOT_PASSWORD`: Base64 encoded password
 
 ## Project Structure
 

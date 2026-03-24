@@ -36,12 +36,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: ROOT_USERNAME
+                  key: DB_ROOT_USERNAME
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret
-                  key: ROOT_PASSWORD
+                  key: DB_ROOT_PASSWORD
           volumeMounts:
             - name: mongo-data
               mountPath: /data/db
@@ -76,6 +76,6 @@ metadata:
   name: mongo-secret
 type: Opaque
 data:
-  DB_CONN_STRING: <base64_encoded_connection_string>
-  ROOT_USERNAME: <base64_encoded_username>
-  ROOT_PASSWORD: <base64_encoded_password>
+  DB_CONN_STRING: ${DB_CONN_STRING_BASE64}
+  DB_ROOT_USERNAME: ${DB_ROOT_USERNAME_BASE64}
+  DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD_BASE64}
