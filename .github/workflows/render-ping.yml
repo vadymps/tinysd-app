@@ -1,0 +1,12 @@
+name: Render Keep Alive
+on:
+  schedule:
+    - cron: '*/10 7-18 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  ping_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Request
+        run: curl -s -I https://tinysd-api.onrender.com | grep "HTTP/"
