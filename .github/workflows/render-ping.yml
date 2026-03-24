@@ -9,4 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Request
-        run: curl -s -I https://tinysd-api.onrender.com | grep "HTTP/"
+        run: curl -s -L -H "User-Agent: Mozilla/5.0" https://tinysd-api.onrender.com > /dev/null
