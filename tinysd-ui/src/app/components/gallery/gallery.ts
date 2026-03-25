@@ -88,6 +88,16 @@ export class GalleryComponent implements OnInit {
     window.open(imagePath, '_blank');
   }
 
+  getThumbnailUrl(fullUrl: string): string {
+    if (!fullUrl || !fullUrl.includes('cloudinary')) {
+      return fullUrl;
+    }
+    return fullUrl.replace(
+      '/upload/',
+      '/upload/w_400,c_limit,q_auto,f_auto/'
+    );
+  }
+
   formatDate(date: Date): string {
     return new Date(date).toLocaleDateString();
   }

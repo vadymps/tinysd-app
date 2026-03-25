@@ -30,7 +30,7 @@
     >
       <div class="aspect-square overflow-hidden">
         <img
-          [src]="image.localPath"
+          [src]="getThumbnailUrl(image.localPath)"
           [alt]="image.prompt"
           class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
         />
