@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { LogsModule } from './logs/logs.module';
 import { ImageModule } from './image/image.module';
 import { DatabaseModule } from './database/database.module';
+import { PingController } from './ping.controller';
 
 @Module({
   imports: [
@@ -13,5 +14,6 @@ import { DatabaseModule } from './database/database.module';
     LogsModule,
     ImageModule,
   ],
+  controllers: [PingController],
 })
 export class AppModule {}

@@ -32,11 +32,11 @@ import { MatIconModule } from '@angular/material/icon';
         </div>
         
         <div class="bg-white rounded-lg shadow-md p-6 text-center">
-          <mat-icon class="text-5xl text-green-600 mb-4">article</mat-icon>
-          <h3 class="text-xl font-semibold mb-2">View Logs</h3>
-          <p class="text-gray-600 mb-4">Monitor system activity and generation logs</p>
-          <button mat-raised-button color="primary" routerLink="/logs">
-            View Logs
+          <mat-icon class="text-5xl text-green-600 mb-4">info</mat-icon>
+          <h3 class="text-xl font-semibold mb-2">About TinySD UI</h3>
+          <p class="text-gray-600 mb-4">Learn more about the app and how it works</p>
+          <button mat-raised-button color="primary" routerLink="/about">
+            About
           </button>
         </div>
       </div>

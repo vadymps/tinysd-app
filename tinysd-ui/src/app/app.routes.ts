@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './components/main-layout/main-layout';
-import { LogsComponent } from './components/logs/logs';
 import { ImageGeneratorComponent } from './components/image-generator/image-generator';
 import { GalleryComponent } from './components/gallery/gallery';
 import { WelcomeComponent } from './components/welcome/welcome';
+import { AboutComponent } from './components/about/about';
 
 export const routes: Routes = [
   {
@@ -11,9 +11,9 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       { path: '', component: WelcomeComponent },
-      { path: 'logs', component: LogsComponent },
       { path: 'image-generator', component: ImageGeneratorComponent },
       { path: 'gallery', component: GalleryComponent },
+      { path: 'about', component: AboutComponent },
     ],
   },
 ];
